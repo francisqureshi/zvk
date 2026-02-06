@@ -108,8 +108,14 @@ pub const Render = struct {
     }
 
     pub fn render(self: *Render, engCtx: *eng.engine.EngCtx) !void {
+        // Check resize Before acquiring to avoid leaving semaphore signaled
+        if (engCtx.wnd.resized) {
+            return;
+        }
+
         const fence = self.fences[self.currentFrame];
         try fence.wait(&self.vkCtx);
+        try fence.reset(&self.vkCtx);
 
         const vkCmdPool = self.cmdPools[self.currentFrame];
         try vkCmdPool.reset(&self.vkCtx);
@@ -118,8 +124,9 @@ pub const Render = struct {
         try vkCmdBuff.begin(&self.vkCtx);
 
         const res = try self.vkCtx.vkSwapChain.acquire(self.vkCtx.vkDevice, self.semsPresComplete[self.currentFrame]);
-        if (engCtx.wnd.resized or res == .recreate) {
+        if (res == .recreate) {
             try vkCmdBuff.end(&self.vkCtx);
+            self.currentFrame = (self.currentFrame + 1) % com.common.FRAMES_IN_FLIGHT;
             return;
         }
         const imageIndex = res.ok;

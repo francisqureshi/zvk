@@ -3,7 +3,10 @@ const vulkan = @import("vulkan");
 const vk = @import("mod.zig");
 
 const log = std.log.scoped(.vk);
-const reqExtensions = [_][*:0]const u8{vulkan.extensions.khr_swapchain.name};
+const reqExtensions = [_][*:0]const u8{
+    vulkan.extensions.khr_swapchain.name,
+    vulkan.extensions.khr_portability_subset.name,
+};
 
 pub const VkDevice = struct {
     deviceProxy: vulkan.DeviceProxy,

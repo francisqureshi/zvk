@@ -17,7 +17,7 @@ pub const VkInstance = struct {
             return err;
         };
 
-        const loader: vulkan.PfnGetInstanceProcAddr = @ptrCast(rawProc);
+        const loader: vulkan.PfnGetInstanceProcAddr = @ptrCast(@alignCast(rawProc));
         const vkb = vulkan.BaseWrapper.load(loader);
 
         const appInfo = vulkan.ApplicationInfo{
@@ -34,7 +34,7 @@ pub const VkInstance = struct {
         try extensionNames.appendSlice(allocator, sdlExtensions);
         const is_macos = builtin.target.os.tag == .macos;
         if (is_macos) {
-            try extensionNames.append("VK_KHR_portability_enumeration");
+            try extensionNames.append(allocator, "VK_KHR_portability_enumeration");
         }
 
         var layerNames = try std.ArrayList([*:0]const u8).initCapacity(allocator, 2);
