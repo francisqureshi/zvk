@@ -4,3 +4,7 @@ zig-cache/
 zig-out/
 *.cap
 .vscode/
+
+# MacOS
+.DS_Store
+

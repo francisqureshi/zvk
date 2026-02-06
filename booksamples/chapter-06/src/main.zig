@@ -22,18 +22,71 @@ const Game = struct {
         _ = self;
         _ = engCtx;
 
-        const triangleModel = eng.mdata.ModelData{
-            .id = "TriangleModel",
+        const leftQuadModel = eng.mdata.ModelData{
+            .id = "LeftQuadModel",
             .meshes = &[_]eng.mdata.MeshData{
                 .{
-                    .id = "TriangleMesh",
-                    .vertices = &[_]f32{ -0.5, -0.5, 0.0, 0.0, 0.5, 0.0, 0.5, -0.5, 0.0 },
-                    .indices = &[_]u32{ 0, 1, 2 },
+                    .id = "LeftQuadMesh",
+                    .vertices = &[_]f32{
+                        -0.8, // '0' Vertex Triplet
+                        0.5,
+                        0.0,
+                        -0.2, // '1' Vertex
+                        0.5,
+                        0.0,
+                        -0.2, // '2' Vertex
+                        -0.5,
+                        0.0,
+                        -0.8, // '3' Vertex
+                        -0.5,
+                        0.0,
+                    },
+                    .indices = &[_]u32{
+                        0, // Tri 0
+                        1,
+                        2,
+                        0, // Tri 1
+                        2,
+                        3,
+                    },
                 },
             },
         };
-        const models = try arenaAlloc.alloc(eng.mdata.ModelData, 1);
-        models[0] = triangleModel;
+
+        const rightQuadModel = eng.mdata.ModelData{
+            .id = "RightQuadModel",
+            .meshes = &[_]eng.mdata.MeshData{
+                .{
+                    .id = "RightQuadMesh",
+                    .vertices = &[_]f32{
+                        0.8, // '0' Vertex Triplet
+                        0.5,
+                        0.0,
+                        0.2, // '1' Vertex
+                        0.5,
+                        0.0,
+                        0.2, // '2' Vertex
+                        -0.5,
+                        0.0,
+                        0.8, // '3' Vertex
+                        -0.5,
+                        0.0,
+                    },
+                    .indices = &[_]u32{
+                        0, // Tri 0
+                        1,
+                        2,
+                        0, // Tri 1
+                        2,
+                        3,
+                    },
+                },
+            },
+        };
+
+        const models = try arenaAlloc.alloc(eng.mdata.ModelData, 2);
+        models[0] = leftQuadModel;
+        models[1] = rightQuadModel;
 
         return .{ .models = models };
     }
